@@ -58,5 +58,5 @@ args = np.array([30.0]) # Array is too short!!!!
 sol = lmdif(funcptr, x_init, neqs, args) 
 ```
 
-Notice, that `args`, is only length 1, but in `myfunc` we try to access `args` assuming it as 2 elements. **No error** will be thrown, and you will read from beyond the end of `args`, and the solution will be garbage. If you far far enough beyond then end an array, it will probably crash your program.
+Notice, that `args`, is only length 1, but in `myfunc` we try to access `args` assuming it as 2 elements. **No error** will be thrown, and you will read from beyond the end of `args`, and the solution will be garbage. If you read far enough beyond then end an array, it will probably crash your program.
 
