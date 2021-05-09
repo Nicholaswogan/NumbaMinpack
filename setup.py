@@ -1,25 +1,23 @@
 
 from setuptools import setup
-from numpy.distutils.command.build_ext import build_ext
-
 from subprocess import call
 
-sources = ['src/VolcGasesFort.f90',
+sources = ['src/minpack.f90',
            'src/minpack/dpmpar.f',
            'src/minpack/enorm.f',
            'src/minpack/fdjac2.f',
-           'src/minpack/lmder.f',
-           'src/minpack/lmder1.f',
            'src/minpack/lmdif.f',
+           'src/minpack/lmdif1.f',
            'src/minpack/lmpar.f',
            'src/minpack/qrfac.f',
-           'src/minpack/qrsolv.f',
-           'src/VolcGasesFort_wrapper.f90']
+           'src/minpack/qrsolv.f']
+           
+flags = '-shared -fPIC -o NumbaMinpack/minpack.so -O3'.split()
     
-cmd = ['gfortran']+sources+'-shared -fPIC -o VolcGases/VolcGasesFort.so -O3'.split()
+cmd = ['gfortran']+sources+flags
 call(cmd)
 
-setup(name = 'VolcGases',
-      packages=['VolcGases'],
-      version='2.2',
+setup(name = 'NumbaMinpack',
+      packages=['NumbaMinpack'],
+      version='0.1',
       include_package_data=True)

@@ -1,1 +1,1 @@
-include VolcGases/VolcGasesFort.so
+include NumbaMinpack/minpack.so
