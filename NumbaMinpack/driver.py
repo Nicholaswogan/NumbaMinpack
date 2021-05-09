@@ -33,9 +33,9 @@ def lmdif(funcptr, x_init, neqs, args, rtol = 1.0e-8):
            fvec.ctypes.data,tol.ctypes.data,info.ctypes.data,iwa.ctypes.data, \
            wa.ctypes.data,lwa.ctypes.data,args.ctypes.data,k.ctypes.data)
 
-    if info < 1 or info > 5:
-        success = False
-    else:
+    if 1 <= info <= 4:
         success = True
+    else:
+        success = False
            
     return x, fvec, success, info.item()
