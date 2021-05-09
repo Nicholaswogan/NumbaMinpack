@@ -2,6 +2,8 @@
 
 `NumbaMinpack` is a light-weight python wrapper to the Levenberg-Marquardt root-finding algorithm in [Minpack](https://en.wikipedia.org/wiki/MINPACK). It very similar to `scipy.optimize.root` ([see here](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.root.html)), when you set `method = 'lm'`. But, the problem with `scipy.optimize.root`, is that it can not be used within `numba` jit-compiled python functions. In contrast, `NumbaMinpack` can be used within a numba compiled function. Also, it is much faster than `scipy.optimize.root`, because the python interpreter is never invoked during a non-linear solve. For example, check out `comparison2scipy.ipynb`.
 
+Right now, `NumbaMinpack` only wraps the Levenberg-Marquardt algorithm from Minpack with an finite-differenced (non-analytical) jacobian. 
+
 ## Installation
 `NumbaMinpack` will probably only work on MacOS or Linux. You must have `gfortran` installed. On Mac install with `brew install gcc`. You must also have python >3.6.0 with `numpy` and `numba`.
 
