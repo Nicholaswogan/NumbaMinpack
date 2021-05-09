@@ -2,13 +2,13 @@ module minpack
   use iso_c_binding, only: c_double, c_int, c_funptr, c_f_procpointer
   implicit none
   
-  procedure(numba_callback1), pointer :: nb_callback_f
+  procedure(numba_callback), pointer :: nb_callback_f
   
   integer(c_int) :: mod_k
   real(c_double), allocatable :: mod_args(:)
   
   abstract interface
-    subroutine numba_callback1(x, fvec, args)
+    subroutine numba_callback(x, fvec, args)
       use iso_c_binding, only: c_double
       implicit none
       real(c_double), intent(in) :: x(*)
