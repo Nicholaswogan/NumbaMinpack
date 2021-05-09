@@ -1,7 +1,7 @@
-      subroutine lmdif1(fcn,m,n,x,fvec,ftol,xtol,maxfev,info,iwa,wa,lwa)
+      subroutine lmdif1(fcn,m,n,x,fvec,tol,maxfev,info,iwa,wa,lwa)
       integer m,n,info,lwa
       integer iwa(n)
-      double precision xtol, ftol
+      double precision tol
       double precision x(n),fvec(m),wa(lwa)
       external fcn
 c     **********
@@ -104,20 +104,20 @@ c     burton s. garbow, kenneth e. hillstrom, jorge j. more
 c
 c     **********
       integer maxfev,mode,mp5n,nfev,nprint
-      double precision epsfcn,factor,gtol,zero
+      double precision epsfcn,factor,ftol,gtol,xtol,zero
       data factor,zero /1.0d2,0.0d0/
       info = 0
 c
 c     check the input parameters for errors.
 c
-      if (n .le. 0 .or. m .lt. n .or. xtol .lt. zero
+      if (n .le. 0 .or. m .lt. n .or. tol .lt. zero
      *    .or. lwa .lt. m*n + 5*n + m) go to 10
 c
 c     call lmdif.
 c
 C      maxfev = 200*(n + 1)
-C      ftol = tol
-C      xtol = tol
+      ftol = tol
+      xtol = tol
       gtol = zero
       epsfcn = zero
       mode = 1

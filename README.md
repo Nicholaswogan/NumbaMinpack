@@ -1,8 +1,8 @@
 # NumbaMinpack
 
-`NumbaMinpack` is a light-weight python wrapper to the Levenberg-Marquardt root-finding algorithm in [Minpack](https://en.wikipedia.org/wiki/MINPACK). It very similar to `scipy.optimize.root` ([see here](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.root.html)), when you set `method = 'lm'`. But, the problem with `scipy.optimize.root`, is that it can not be used within `numba` jit-compiled python functions. In contrast, `NumbaMinpack` can be used within a numba compiled function. Also, it is much faster than `scipy.optimize.root`, because the python interpreter is never invoked during a non-linear solve. For example, check out `comparison2scipy.ipynb`.
+`NumbaMinpack` is a python wrapper to [Minpack](https://en.wikipedia.org/wiki/MINPACK). It very similar to `scipy.optimize.root` ([see here](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.root.html)), when you set `method = 'lm'` or `method = 'hybr'`. But, the problem with `scipy.optimize.root`, is that it can not be used within `numba` jit-compiled python functions. In contrast, `NumbaMinpack` can be used within a numba compiled function. Also, it is much faster than `scipy.optimize.root`, because the python interpreter is never invoked during a non-linear solve. For example, check out `comparison2scipy.ipynb`.
 
-Right now, `NumbaMinpack` only wraps the Levenberg-Marquardt algorithm from Minpack with an finite-differenced (non-analytical) jacobian. 
+Right now, `NumbaMinpack` only wraps Minpack's Levenberg-Marquardt ("lmdif") and "hybrd" root-finding algorithms with a finite-differenced (non-analytical) jacobian. These wrappers are NOT thread-safe, but they will work for multiprocessing.
 
 ## Installation
 `NumbaMinpack` will probably only work on MacOS or Linux. You must have `gfortran` installed. On Mac install with `brew install gcc`. You must also have python >3.6.0 with `numpy` and `numba`.
@@ -16,7 +16,7 @@ python -m pip install git+git://github.com/Nicholaswogan/NumbaMinpack.git
 ## Basic usage
 
 ```python
-from NumbaMinpack import lmdif, minpack_sig
+from NumbaMinpack import lmdif, hybrd, minpack_sig
 from numba import njit, cfunc
 import numpy as np
 
@@ -28,19 +28,29 @@ def myfunc(x, fvec, args):
     
 funcptr = myfunc.address # pointer to myfunc
 
-@njit
-def test():
-    x_init = np.array([10.0,10.0]) # initial conditions
-    neqs = 2 # number of equations
-    args = np.array([30.0,8.0]) # data you want to pass to myfunc
-    sol = lmdif(funcptr, x_init, neqs, args) # solve
-    return sol
-    
-xsol, fvec, success, info = test()
+x_init = np.array([10.0,10.0]) # initial conditions
+neqs = 2 # number of equations
+args = np.array([30.0,8.0]) # data you want to pass to myfunc
+xsol, fvec, success, info = lmdif(funcptr, x_init, neqs, args) # solve with lmdif
+xsol, fvec, success, info = hybrd(funcptr, x_init, args) # OR solve with hybrd
 # xsol = solution
 # fvec = function evaluated at solution
 # success = True/False
 # info = an integer. See src/lmdif1.f for what it means.
+```
+
+Note, that either `lmdif` or `hybrd` can be called within a jit-compiled numba function:
+```python
+@njit
+def test()
+  return hybrd(funcptr, x_init, args)
+sol = test() # this works!!! :)
+
+@njit
+def test_sp():
+    sol_sp = scipy.optimize.root(myfunc_scipy,x_init,method='hybr')
+    return sol_sp
+test_sp() # this DOES NOT WORK :(
 ```
 
 ## Warning

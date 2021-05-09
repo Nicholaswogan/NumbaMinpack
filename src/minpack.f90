@@ -20,13 +20,13 @@ module minpack
 
 contains
 
-  subroutine lmdif1_wrapper(cfcn, m, n, x, fvec, ftol, xtol, maxfev, info, iwa, &
+  subroutine lmdif1_wrapper(cfcn, m, n, x, fvec, tol, maxfev, info, iwa, &
                             wa, lwa, args, k) bind(c)
     type(c_funptr), intent(in), value :: cfcn
     integer(c_int), intent(in) :: m, n
     real(c_double), intent(inout) :: x(n)
     real(c_double), intent(out) :: fvec(m)
-    real(c_double), intent(in) :: ftol, xtol
+    real(c_double), intent(in) :: tol
     integer(c_int), intent(in) :: maxfev
     integer(c_int), intent(out) :: info
     integer(c_int), intent(in) :: iwa(n)
@@ -35,11 +35,14 @@ contains
     real(c_double), intent(in) :: args(k)
     integer(c_int), intent(in) :: k
     
+    
     allocate(mod_args_lmdif(k))
     mod_args_lmdif = args
+
     
     call c_f_procpointer(cfcn,nb_callback_f)
-    call lmdif1(fcn_lmdif,m,n,x,fvec,ftol,xtol,maxfev,info,iwa,wa,lwa)
+    ! I adjusted lmdif1.f to also include maxfev as an argument
+    call lmdif1(fcn_lmdif,m,n,x,fvec,tol,maxfev,info,iwa,wa,lwa)
     
     deallocate(mod_args_lmdif)
     
@@ -55,13 +58,14 @@ contains
     
   end subroutine
   
-  subroutine hybrd1_wrapper(cfcn, n, x, fvec, tol, info, wa, lwa, args, k) bind(c)
+  subroutine hybrd1_wrapper(cfcn, n, x, fvec, tol, maxfev, info, wa, &
+                            lwa, args, k) bind(c)
     type(c_funptr), intent(in), value :: cfcn
     integer(c_int), intent(in) :: n
     real(c_double), intent(inout) :: x(n)
     real(c_double), intent(out) :: fvec(n)
-    real(c_double), intent(in) :: tol!, ftol, xtol
-    ! integer(c_int), intent(in) :: maxfev
+    real(c_double), intent(in) :: tol
+    integer(c_int), intent(in) :: maxfev
     integer(c_int), intent(out) :: info
     integer(c_int), intent(in) :: lwa
     real(c_double), intent(in) :: wa(lwa)
@@ -72,8 +76,9 @@ contains
     mod_args_hybrd = args
     
     call c_f_procpointer(cfcn,nb_callback_f)
-    call hybrd1(fcn_hybrd,n,x,fvec,tol,info,wa,lwa)
-    
+    ! I adjusted hybrd1.f to also include maxfev as an argument
+    call hybrd1(fcn_hybrd,n,x,fvec,tol,maxfev,info,wa,lwa)
+  
     deallocate(mod_args_hybrd)
     
   end subroutine
@@ -87,7 +92,5 @@ contains
     call nb_callback_f(x, fvec, mod_args_hybrd)
     
   end subroutine
-  
-  
-  
+
 end module

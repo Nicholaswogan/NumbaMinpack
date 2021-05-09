@@ -1,4 +1,4 @@
-      subroutine hybrd1(fcn,n,x,fvec,tol,info,wa,lwa)
+      subroutine hybrd1(fcn,n,x,fvec,tol,maxfev,info,wa,lwa)
       integer n,info,lwa
       double precision tol
       double precision x(n),fvec(n),wa(lwa)
