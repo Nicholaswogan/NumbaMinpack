@@ -12,7 +12,7 @@ minpack = ct.CDLL(rootdir+'minpack.so')
 lmdif1 = minpack.lmdif1_wrapper
 lmdif1.argtypes = [ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, \
                    ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, \
-                   ct.c_void_p, ct.c_void_p, ct.c_void_p]
+                   ct.c_void_p, ct.c_void_p]
 lmdif1.restype = None
 
 @njit
@@ -41,7 +41,7 @@ def lmdif(funcptr, x_init, neqs, args, tol = 1.49012e-8, maxfev = 0):
     fvec : np.array([np.float64])
         funcptr evaluated at the solution, x
     success : bool
-        True if hybrd did not reaturn an error
+        True if lmdif did not return an error
     info : int
         Integer giving more information about why algorithm stopped.
         See lmdif1.f
@@ -58,7 +58,7 @@ def lmdif(funcptr, x_init, neqs, args, tol = 1.49012e-8, maxfev = 0):
     else:
         maxfev_ = maxfev1
     info = np.array(0,np.int32)
-    iwa = np.array(x_init.shape,np.int32)
+    # iwa = np.array(x_init.shape,np.int32)
     lwa = np.array((m*n+5*n+m)+2,np.int32)
     wa = np.zeros((lwa.item(),),np.float64)
     args = np.asarray(args,np.float64)
@@ -66,7 +66,7 @@ def lmdif(funcptr, x_init, neqs, args, tol = 1.49012e-8, maxfev = 0):
     
     lmdif1(funcptr,m.ctypes.data,n.ctypes.data,x.ctypes.data, \
            fvec.ctypes.data,tol_.ctypes.data, \
-           maxfev_.ctypes.data, info.ctypes.data,iwa.ctypes.data, \
+           maxfev_.ctypes.data, info.ctypes.data, \
            wa.ctypes.data,lwa.ctypes.data,args.ctypes.data,k.ctypes.data)
 
     if 1 <= info <= 4:

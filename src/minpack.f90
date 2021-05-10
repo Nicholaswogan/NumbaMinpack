@@ -20,7 +20,7 @@ module minpack
 
 contains
 
-  subroutine lmdif1_wrapper(cfcn, m, n, x, fvec, tol, maxfev, info, iwa, &
+  subroutine lmdif1_wrapper(cfcn, m, n, x, fvec, tol, maxfev, info, &
                             wa, lwa, args, k) bind(c)
     type(c_funptr), intent(in), value :: cfcn
     integer(c_int), intent(in) :: m, n
@@ -29,7 +29,7 @@ contains
     real(c_double), intent(in) :: tol
     integer(c_int), intent(in) :: maxfev
     integer(c_int), intent(out) :: info
-    integer(c_int), intent(in) :: iwa(n)
+    integer(c_int), allocatable :: iwa(:)
     integer(c_int), intent(in) :: lwa
     real(c_double), intent(in) :: wa(lwa)
     real(c_double), intent(in) :: args(k)
@@ -38,6 +38,7 @@ contains
     
     allocate(mod_args_lmdif(k))
     mod_args_lmdif = args
+    allocate(iwa(n))
 
     
     call c_f_procpointer(cfcn,nb_callback_f)
@@ -45,6 +46,7 @@ contains
     call lmdif1(fcn_lmdif,m,n,x,fvec,tol,maxfev,info,iwa,wa,lwa)
     
     deallocate(mod_args_lmdif)
+    deallocate(iwa)
     
   end subroutine
   
