@@ -1,8 +1,12 @@
 # NumbaMinpack
 
-`NumbaMinpack` is a python wrapper to [Minpack](https://en.wikipedia.org/wiki/MINPACK). It very similar to `scipy.optimize.root` ([see here](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.root.html)), when you set `method = 'lm'` or `method = 'hybr'`. But, the problem with `scipy.optimize.root`, is that it can not be used within `numba` jit-compiled python functions. In contrast, `NumbaMinpack` can be used within a numba compiled function. Also, it is much faster than `scipy.optimize.root`, because the python interpreter is never invoked during a non-linear solve. For example, check out `comparison2scipy.ipynb`.
+`NumbaMinpack` is a python wrapper to [Minpack](https://en.wikipedia.org/wiki/MINPACK), which is for solving systems of non-linear equations.
 
-Right now, `NumbaMinpack` only wraps Minpack's Levenberg-Marquardt ("lmdif") and "hybrd" root-finding algorithms with a finite-differenced (non-analytical) jacobian. These wrappers are NOT thread-safe, but they will work for multiprocessing.
+This package is very similar to `scipy.optimize.root` ([see here](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.root.html)), when you set `method = 'lm'` or `method = 'hybr'`. But, the problem with `scipy.optimize.root`, is that it can not be used within numba jit-compiled python functions. In contrast, `NumbaMinpack` can be used within a numba compiled function. For example, check out `comparison2scipy.ipynb`.
+
+Right now, `NumbaMinpack` wraps the following Minpack algorithms 
+- `lmdif` (Levenberg-Marquardt) with a finite-differenced, non-analytical, jacobian.
+- `hybrd` (modified Powell method) with a finite-differenced, non-analytical, jacobian. 
 
 ## Installation
 `NumbaMinpack` will probably only work on MacOS or Linux. You must have `gfortran` installed. On Mac install with `brew install gcc`. You must also have python >3.6.0 with `numpy` and `numba`.
@@ -26,7 +30,7 @@ def myfunc(x, fvec, args):
     fvec[0] = x[0]**2 - args[0]
     fvec[1] = x[1]**2 - args[1]
     
-funcptr = myfunc.address # pointer to myfunc
+funcptr = myfunc.address # address in memory to myfunc
 
 x_init = np.array([10.0,10.0]) # initial conditions
 neqs = 2 # number of equations
@@ -50,7 +54,7 @@ sol = test() # this works!!! :)
 def test_sp():
     sol_sp = scipy.optimize.root(myfunc_scipy,x_init,method='hybr')
     return sol_sp
-test_sp() # this DOES NOT WORK :(
+sol_sp = test_sp() # this DOES NOT WORK :(
 ```
 
 ## Warning
