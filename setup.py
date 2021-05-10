@@ -22,7 +22,9 @@ sources = ['src/minpack.f90',
 flags = '-shared -fPIC -o NumbaMinpack/minpack.so -O3'.split()
     
 cmd = ['gfortran']+sources+flags
-call(cmd)
+err = call(cmd)
+if err:
+    raise Exception('Failed to compile Fortran. Make sure you have gfortran installed correctly.')
 call('rm minpack.mod'.split())
 
 setup(name = 'NumbaMinpack',
