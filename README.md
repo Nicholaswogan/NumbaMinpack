@@ -11,10 +11,10 @@ Right now, `NumbaMinpack` wraps the following Minpack algorithms
 ## Installation
 `NumbaMinpack` will probably only work on MacOS or Linux. You must have a fortran compiler (On Mac install with `brew install gcc`).
 
-After satisfying the dependencies, install with the pip command below
+After satisfying the dependencies, install with the pip
 
 ```
-python -m pip install git+git://github.com/Nicholaswogan/NumbaMinpack.git
+python -m pip install NumbaMinpack
 ```
 
 ## Basic usage
