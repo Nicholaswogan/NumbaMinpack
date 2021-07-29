@@ -8,7 +8,7 @@ minpack_sig = types.void(types.CPointer(types.double),
                    types.CPointer(types.double))
 
 rootdir = os.path.dirname(os.path.realpath(__file__))+'/'
-minpack = ct.CDLL(rootdir+'minpack.so')
+minpack = ct.CDLL(rootdir+'libminpack.so')
 lmdif1 = minpack.lmdif1_wrapper
 lmdif1.argtypes = [ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, \
                    ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, \
