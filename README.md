@@ -47,7 +47,7 @@ Note, that either `lmdif` or `hybrd` can be called within a jit-compiled numba f
 ```python
 @njit
 def test()
-  return hybrd(funcptr, x_init, args)
+    return hybrd(funcptr, x_init, args)
 sol = test() # this works!!! :)
 
 @njit
