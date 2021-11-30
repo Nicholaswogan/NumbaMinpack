@@ -9,7 +9,8 @@ Right now, `NumbaMinpack` wraps the following Minpack algorithms
 - `hybrd` (modified Powell method) with a finite-differenced, non-analytical, jacobian. 
 
 ## Installation
-`NumbaMinpack` will probably only work on MacOS or Linux. You must have a fortran compiler (On Mac install with `brew install gcc`).
+
+You must have a fortran compiler (On Mac install with `brew install gcc`).
 
 After satisfying the dependencies, install with the pip
 
