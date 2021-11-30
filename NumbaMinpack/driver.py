@@ -2,13 +2,21 @@ import ctypes as ct
 from numba import njit, types
 import numpy as np
 import os
+import platform
 
 minpack_sig = types.void(types.CPointer(types.double),
                    types.CPointer(types.double),
                    types.CPointer(types.double))
-
 rootdir = os.path.dirname(os.path.realpath(__file__))+'/'
-minpack = ct.CDLL(rootdir+'libminpack.so')
+
+if platform.uname()[0] == "Windows":
+    name = "libminpack.dll"
+elif platform.uname()[0] == "Linux":
+    name = "libminpack.so"
+else:
+    name = "libminpack.dylib"
+
+minpack = ct.CDLL(rootdir+name)
 lmdif1 = minpack.lmdif1_wrapper
 lmdif1.argtypes = [ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, \
                    ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, \
@@ -16,7 +24,7 @@ lmdif1.argtypes = [ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void
 lmdif1.restype = None
 
 @njit
-def lmdif(funcptr, x_init, neqs, args, tol = 1.49012e-8, maxfev = 0):
+def lmdif(funcptr, x_init, neqs, args = np.array([0.0]), tol = 1.49012e-8, maxfev = 0):
     """Solve for least squares with MINPACK's Levenberg-Marquardt routine.
 
     Parameters
@@ -84,7 +92,7 @@ hybrd1.argtypes = [ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void
 hybrd1.restype = None    
     
 @njit
-def hybrd(funcptr, x_init, args, tol = 1.49012e-8, maxfev = 0):
+def hybrd(funcptr, x_init, args = np.array([0.0]), tol = 1.49012e-8, maxfev = 0):
     """Find the roots of a multivariate function using MINPACK’s hybrd
     routine (modified Powell method).
 

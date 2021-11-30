@@ -27,7 +27,6 @@ add_library(minpack SHARED
             ${CMAKE_CURRENT_SOURCE_DIR}/src/r1updt.f)
             
 set_target_properties(minpack PROPERTIES PREFIX "lib")
-set_target_properties(minpack PROPERTIES SUFFIX ".so")
 
 if (SKBUILD)
   install(TARGETS minpack DESTINATION NumbaMinpack)
