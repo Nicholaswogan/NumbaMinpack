@@ -1,5 +1,2 @@
 [build-system]
 requires = ["setuptools>=42", "wheel", "scikit-build", "cmake>=3.18", "ninja"]
-
-[tool.cibuildwheel.macos]
-before-all = "brew install gcc"
