@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4.0)
+cmake_minimum_required(VERSION 3.14)
 project(NumbaMinpack LANGUAGES Fortran)
 
 option(SKBUILD "Should be ON of being build by skbuild, 
