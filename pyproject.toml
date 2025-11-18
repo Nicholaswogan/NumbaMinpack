@@ -20,4 +20,4 @@ Homepage = "https://github.com/Nicholaswogan/NumbaMinpack"
 package_name=["NumbaMinpack"]
 
 [tool.py-build-cmake.cmake]
-options={"SKBUILD"="ON"}
+options={SKBUILD="ON"}
